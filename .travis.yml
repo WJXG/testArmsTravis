@@ -72,11 +72,16 @@ deploy:
     #tags设置为true表示只有在tag的情况下才部署
     tags: true
     branch:  master
-#before_install:
-#  - chmod a+x gradlew
-#  - rvm install 2.1.5
-#  - gem install rubyzip -v 1.3.0
-#  - gem install fir-cli
+  tag: latest
+    #指定只有当tag的为vx.x.x（如v1.0.0）才发包
+    condition: '$TRAVIS_TAG =~ ^v[0-9]+.[0-9]+.[0-9]+$'
+before_install:
+  - chmod a+x gradlew
+  - rvm install 2.1.5
+  - gem install rubyzip -v 1.3.0
+  - gem install fir-cli
+after_deploy:
+  - fir p app/release/buffArms.apk -T $FIR_IM -c "`git cat-file tag $TRAVIS_TAG`"
 #after_deploy:
 #  - fir publish app/release/buffArms.apk -T $FIR_IM -c "`git cat-file tag $TRAVIS_TAG`"
 
